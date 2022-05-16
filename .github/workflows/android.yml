@@ -1,0 +1,13 @@
+name: Android
+
+on: [ "push" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-android-20220131172314-3983b4e # https://github.com/dotnet/runtime/blob/c67be6cbc89f91bd3c1174da5a384563be37a6b0/eng/pipelines/common/platform-matrix.yml#L471
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: ./build.sh mono+libs -os Android -arch arm64
