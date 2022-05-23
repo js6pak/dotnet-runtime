@@ -1,0 +1,29 @@
+name: Build
+
+on: push
+
+jobs:
+  build-win:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        arch: [x86, x64]
+    steps:
+      - uses: actions/checkout@v2.3.5
+      - name: Build
+        shell: bash
+        run: |
+          ./build.sh clr.runtime+clr.corelib+libs -a ${{ matrix.arch }}
+      - name: Collect final build
+        shell: bash
+        run: |
+          mkdir -p artifacts/ci/windows-${{ matrix.arch }}
+          cp artifacts/bin/coreclr/windows.${{ matrix.arch }}.Debug/{clretwrc,clrgc,clrjit,coreclr,dbgshim,jitinterface_${{ matrix.arch }},mscordaccore,mscordbi,mscorrc}.dll artifacts/ci/windows-${{ matrix.arch }}/
+          cp artifacts/bin/coreclr/windows.${{ matrix.arch }}.Debug/IL/System.Private.CoreLib.dll artifacts/ci/windows-${{ matrix.arch }}/
+          mkdir -p artifacts/ci/windows-${{ matrix.arch }}/corlib
+          cp artifacts/bin/runtime/net6.0-windows-Debug-${{ matrix.arch }}/*.dll artifacts/ci/windows-${{ matrix.arch }}/corlib/
+      - uses: actions/upload-artifact@v2
+        with:
+          name: mini-coreclr
+          path: |
+            artifacts/ci/
