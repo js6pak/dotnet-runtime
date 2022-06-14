@@ -44,12 +44,12 @@ jobs:
             }
 
       - uses: actions/checkout@v3
-      - if: matrix.os == 'linux-latest'
+      - if: matrix.os == 'ubuntu-latest'
         name: Install linux dependencies
         run: |
           sudo apt update
           sudo apt install -y libkrb5-dev liblttng-ust-dev
-      - if: matrix.os == 'linux-latest' && matrix.arch == 'x86'
+      - if: matrix.os == 'ubuntu-latest' && matrix.arch == 'x86'
         name: Install 32bit linux dependencies
         run: |
           sudo apt install -y debootstrap qemu-user-static qemu clang-9 libclang-9-dev llvm-9-dev
@@ -67,11 +67,11 @@ jobs:
           cp artifacts/bin/runtime/net*-${{ steps.set-vars.outputs.os-name }}-${{ matrix.configuration }}-${{ matrix.arch }}/*.dll artifacts/ci/${{ steps.set-vars.outputs.rid }}/corlib/
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ steps.set-vars.outputs.rid }}
+          name: ${{ steps.set-vars.outputs.rid }} ${{ matrix.configuration }}
           path: |
             artifacts/ci/${{ steps.set-vars.outputs.rid }}
       - uses: actions/upload-artifact@v3
         with:
-          name: mini-coreclr
+          name: mini-coreclr ${{ matrix.configuration }}
           path: |
             artifacts/ci/
