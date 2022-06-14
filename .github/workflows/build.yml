@@ -43,7 +43,7 @@ jobs:
           cp artifacts/bin/coreclr/OSX.x64.Release/lib{clrgc,clrjit,coreclr,dbgshim,jitinterface_x64,mscordaccore,mscordbi}.dylib artifacts/ci/macos-x64/
           cp artifacts/bin/coreclr/OSX.x64.Release/IL/System.Private.CoreLib.dll artifacts/ci/macos-x64/
           mkdir -p artifacts/ci/macos-x64/corlib
-          cp artifacts/bin/runtime/net6.0-OSX-Release-x64/*.dll artifacts/ci/macos-x64/corlib/
+          cp artifacts/bin/runtime/net6.0-OSX-Release-x64/*.{dll,dylib} artifacts/ci/macos-x64/corlib/
       - uses: actions/upload-artifact@v2
         with:
           name: mini-coreclr
@@ -66,7 +66,7 @@ jobs:
           cp artifacts/bin/coreclr/Linux.x64.Release/lib{clrgc,clrjit,coreclr,dbgshim,jitinterface_x64,mscordaccore,mscordbi}.so artifacts/ci/linux-x64/
           cp artifacts/bin/coreclr/Linux.x64.Release/IL/System.Private.CoreLib.dll artifacts/ci/linux-x64/
           mkdir -p artifacts/ci/linux-x64/corlib
-          cp artifacts/bin/runtime/net6.0-Linux-Release-x64/*.dll artifacts/ci/linux-x64/corlib/
+          cp artifacts/bin/runtime/net6.0-Linux-Release-x64/*.{dll,so} artifacts/ci/linux-x64/corlib/
       - uses: actions/upload-artifact@v2
         with:
           name: mini-coreclr
@@ -92,7 +92,7 @@ jobs:
           cp artifacts/bin/coreclr/Linux.x86.Release/lib{clrgc,clrjit,coreclr,dbgshim,jitinterface_x86,mscordaccore,mscordbi}.so artifacts/ci/linux-x86/
           cp artifacts/bin/coreclr/Linux.x86.Release/IL/System.Private.CoreLib.dll artifacts/ci/linux-x86/
           mkdir -p artifacts/ci/linux-x86/corlib
-          cp artifacts/bin/runtime/net6.0-Linux-Release-x86/*.dll artifacts/ci/linux-x86/corlib/
+          cp artifacts/bin/runtime/net6.0-Linux-Release-x86/*.{dll,so} artifacts/ci/linux-x86/corlib/
       - uses: actions/upload-artifact@v2
         with:
           name: mini-coreclr
