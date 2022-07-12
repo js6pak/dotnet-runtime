@@ -30,7 +30,7 @@ jobs:
                 core.setOutput("rid", "linux-" + arch);
                 core.setOutput("build-cmd", "./build.sh");
                 core.setOutput("dbg-ext", "dbg");
-                core.setOutput("extra-build-args", "--keepnativesymbols");
+                core.setOutput("extra-build-args", "--keepnativesymbols true");
                 break;
 
               case "windows-latest":
@@ -48,7 +48,7 @@ jobs:
                 core.setOutput("rid", "macos-" + arch);
                 core.setOutput("build-cmd", "./build.sh");
                 core.setOutput("dbg-ext", "dsym");
-                core.setOutput("extra-build-args", "--keepnativesymbols");
+                core.setOutput("extra-build-args", "--keepnativesymbols true");
                 break;
             }
 
