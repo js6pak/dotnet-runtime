@@ -87,6 +87,8 @@ abort_signal_get (void)
 static int
 suspend_signal_get (void)
 {
+	// SIGPWR is used by il2cpp gc, use SIGXFSZ instead
+	return SIGXFSZ;
 #if defined(HOST_ANDROID)
 	return SIGPWR;
 #elif defined (SIGRTMIN)
@@ -106,6 +108,8 @@ suspend_signal_get (void)
 static int
 restart_signal_get (void)
 {
+	// SIGXCPU is used by il2cpp gc, use SIGTTOU instead
+	return SIGTTOU;
 #if defined(HOST_ANDROID)
 	return SIGXCPU;
 #elif defined (SIGRTMIN)
