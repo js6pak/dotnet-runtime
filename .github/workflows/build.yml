@@ -1,16 +1,19 @@
-name: Build CoreCLR
+name: Build
 
 on: push
+permissions:
+  actions: write
+  contents: write
 
 jobs:
-  build:
+  build-coreclr:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        arch: [x64, x86]
-        configuration: [Release, Debug]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        arch: [ x64, x86 ]
+        configuration: [ Release, Debug ]
         exclude:
           - os: macos-latest
             arch: x86
@@ -70,7 +73,7 @@ jobs:
       - name: Build
         if: matrix.os != 'ubuntu-latest' || matrix.arch != 'x86'
         run: |
-         ${{ steps.set-vars.outputs.build-cmd }} clr.runtime+clr.corelib+libs -c ${{ matrix.configuration }} -a ${{ matrix.arch }} /p:OfficialBuildId=${{ steps.set-vars.outputs.build-date }}.0 ${{ steps.set-vars.outputs.extra-build-args }}
+          ${{ steps.set-vars.outputs.build-cmd }} clr.runtime+clr.corelib+libs -c ${{ matrix.configuration }} -a ${{ matrix.arch }} /p:OfficialBuildId=${{ steps.set-vars.outputs.build-date }}.0 ${{ steps.set-vars.outputs.extra-build-args }}
       - name: Collect final build
         shell: bash
         run: |
@@ -91,9 +94,32 @@ jobs:
           path: |
             artifacts/ci/
 
-  create_release:
-    needs:
-      - build
+  build-mono:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-android-20200422191843-e2c3f83
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, arm, x64, x86 ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: ./build.sh mono+libs --os Android --arch ${{ matrix.arch }} -c Release
+      - name: Collect final build
+        shell: bash
+        run: |
+          mkdir -p artifacts/ci/{native,managed}
+          cp artifacts/bin/mono/Android.${{ matrix.arch }}.Release/{lib*.so,System.Private.CoreLib.dll} artifacts/ci/native
+          cp artifacts/bin/runtime/net*-Android-Release-${{ matrix.arch }}/*.so artifacts/ci/native
+          cp artifacts/bin/runtime/net*-Android-Release-${{ matrix.arch }}/*.dll artifacts/ci/managed
+      - uses: actions/upload-artifact@v3
+        with:
+          name: android-${{ matrix.arch }}
+          path: artifacts/ci/
+
+  create-release:
+    needs: [ build-coreclr, build-mono ]
     runs-on: ubuntu-latest
 
     steps:
