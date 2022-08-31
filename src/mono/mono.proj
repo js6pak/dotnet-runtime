@@ -495,6 +495,10 @@
     <Exec Condition="'$(BuildMonoAOTCrossCompilerOnly)' != 'true'" Command="$(_MonoCMakeBuildCommand)" IgnoreStandardErrorWarningFormat="true" WorkingDirectory="$(MonoObjDir)"/>
 
     <!-- strip -->
+    <CallTarget Targets="StripMonoRuntime" Condition="'$(KeepNativeSymbols)' != 'true'"/>
+  </Target>
+
+  <Target Name="StripMonoRuntime">
     <PropertyGroup>
       <MonoToolchainPrebuiltOS Condition="$([MSBuild]::IsOSPlatform('Linux'))">linux-x86_64</MonoToolchainPrebuiltOS>
       <MonoToolchainPrebuiltOS Condition="$([MSBuild]::IsOSPlatform('OSX'))">darwin-x86_64</MonoToolchainPrebuiltOS>
