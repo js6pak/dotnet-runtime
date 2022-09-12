@@ -110,7 +110,9 @@ jobs:
         shell: bash
         run: |
           mkdir -p artifacts/ci/{native,managed}
+          mkdir artifacts/ci/native/include
           cp artifacts/bin/mono/Android.${{ matrix.arch }}.Release/{lib*.so,System.Private.CoreLib.dll} artifacts/ci/native
+          cp -R artifacts/bin/mono/Android.${{ matrix.arch }}.Release/include/mono-2.0/mono artifacts/ci/native/include
           cp artifacts/bin/runtime/net*-Android-Release-${{ matrix.arch }}/*.so artifacts/ci/native
           cp artifacts/bin/runtime/net*-Android-Release-${{ matrix.arch }}/*.dll artifacts/ci/managed
       - uses: actions/upload-artifact@v3
