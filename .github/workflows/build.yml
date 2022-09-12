@@ -109,8 +109,9 @@ jobs:
       - name: Collect final build
         shell: bash
         run: |
-          mkdir -p artifacts/ci/{native,managed}
+          mkdir -p artifacts/ci/{native,managed,include}
           cp artifacts/bin/mono/Android.${{ matrix.arch }}.Release/{lib*.so,System.Private.CoreLib.dll} artifacts/ci/native
+          cp -R artifacts/bin/mono/Android.${{ matrix.arch }}.Release/include/mono-2.0/mono artifacts/ci/include
           cp artifacts/bin/runtime/net*-Android-Release-${{ matrix.arch }}/*.so artifacts/ci/native
           cp artifacts/bin/runtime/net*-Android-Release-${{ matrix.arch }}/*.dll artifacts/ci/managed
       - uses: actions/upload-artifact@v3
